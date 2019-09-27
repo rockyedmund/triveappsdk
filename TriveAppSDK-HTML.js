@@ -1,6 +1,6 @@
 var script = window.document.createElement('script');
  
-window.script.src = './jquery.min.js';
+script.src = './jquery.min.js';
 window.document.getElementsByTagName('head')[0].appendChild(script); 
 
 const TriveAppSDK = (function (window) {
