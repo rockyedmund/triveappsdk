@@ -1,4 +1,4 @@
-const TriveAppSDK = (function () {
+const TriveAppSDK = (function (window) {
 
     // Force no margin and padding on html and body
     _injectCSS();
@@ -72,23 +72,23 @@ const TriveAppSDK = (function () {
 
     /**
      * Pay to a wallet address
-     * @param opts.address    Address to pay to
-     * @param opts.amount     Amount to pay to
-     * @param opts.message    Message to include
-     * @param opts.identifier Transaction identifier (Max 8 chars)
+     * @param options.address    Address to send to
+     * @param options.amount     Amount to send to
+     * @param options.message    Message (OP_RETURN) to include
+     * @param options.opReturn   Transaction identifier (Max 40 chars)****
      */
     function payToWallet(options) { //address, amount, message
         return new Promise(async (resolve, reject) => {
             try {
                 if (!options.address || !options.amount.toString()) {
                     reject({ response: 1, m: msg.invalidParameter });
-                    console.log({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
                     return window.alert(msg.invalidParameter);
                 }
 
                 if (options.amount != parseInt(options.amount) || options.amount != Number(options.amount)) {
                     reject({ response: 1, m: msg.amountMustBeInteger });
-                    console.log({ response: 1, m: msg.amountMustBeInteger });
+                    console.error({ response: 1, m: msg.amountMustBeInteger });
                     return window.alert(msg.amountMustBeInteger);
                 }
 
@@ -102,113 +102,143 @@ const TriveAppSDK = (function () {
 
                 return resolve(window.open(openURL));
             } catch (e) {
-                console.log(({ c: 1, m: msg.serverError, e: String(e) }))
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
             }
         });
     };
 
+    /**
+     * Block to open on insight
+     * @param options.blockhash    Block hash to open on insight
+     */
     function openInsightBlock(options) { //blockhash
         return new Promise(async (resolve, reject) => {
+            try {
+                if (!options.blockhash) {
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
+                    return window.alert(msg.invalidParameter);
+                } else {
+                    function getBlock() {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                const res = await fetch(insightURL + 'api/block/' + options.blockhash);
+                                const resJson = await res.json();
+                                if (resJson && resJson.hash) {
+                                    return resolve({ c: 0, d: resJson.hash, m: '' });
+                                }
 
-            if (!options.blockhash) {
-                reject({ response: 1, m: msg.invalidParameter });
-                return window.alert(msg.invalidParameter);
-            } else {
-                function getBlock() {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const res = await fetch(insightURL + 'api/block/' + options.blockhash);
-                            const resJson = await res.json();
-                            if (resJson && resJson.hash) {
-                                return resolve({ c: 0, d: resJson.hash, m: '' });
+                                return reject({ c: 1, m: msg.serverError });
                             }
-                            return reject({ c: 1, m: msg.serverError });
-                        }
-                        catch (e) {
-                            return reject({ c: 1, m: msg.invalidBlockHash, e: String(e) });
-                        }
-                    })
-                }
+                            catch (e) {
+                                return reject({ c: 1, m: msg.invalidBlockHash, e: String(e) });
+                            }
+                        })
+                    }
 
-                getBlock().then(res => {
-                    resolve({ c: 0, d: `${insightURL}block/${res.d}` })
-                    return window.open(`${insightURL}block/${res.d}`);
-                }).catch(res => {
-                    reject(res);
-                    return window.alert(res.m);
-                });
+                    getBlock().then(res => {
+                        resolve({ c: 0, d: `${insightURL}block/${res.d}` })
+                        return window.open(`${insightURL}block/${res.d}`);
+                    }).catch(res => {
+                        reject(res);
+                        console.error(res);
+                        return window.alert(res.m);
+                    });
+                }
+            } catch (e) {
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
+                return reject({ c: 1, m: msg.serverError, e: String(e) });
             }
         });
     };
 
+    /**
+     * Address to open on insight
+     * @param options.address    Address hash to open on insight
+     */
     function openInsightAddress(options) { //address
         return new Promise(async (resolve, reject) => {
-
-            if (!options.address) {
-                reject({ response: 1, m: msg.invalidParameter });
-                return window.alert(msg.invalidParameter);
-            } else {
-                function getInisght() {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const res = await fetch(insightURL + 'api/addr/' + options.address);
-                            const resJson = await res.json();
-                            if (resJson && resJson.addrStr) {
-                                return resolve({ c: 0, d: resJson.addrStr, m: '' });
+            try {
+                if (!options.address) {
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
+                    return window.alert(msg.invalidParameter);
+                } else {
+                    function getInisght() {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                const res = await fetch(insightURL + 'api/addr/' + options.address);
+                                const resJson = await res.json();
+                                if (resJson && resJson.addrStr) {
+                                    return resolve({ c: 0, d: resJson.addrStr, m: '' });
+                                }
+                                return reject({ c: 1, m: msg.serverError });
                             }
-                            return reject({ c: 1, m: msg.serverError });
-                        }
-                        catch (e) {
-                            return reject({ c: 1, m: msg.invalidAddress, e: String(e) });
-                        }
-                    })
-                }
+                            catch (e) {
+                                return reject({ c: 1, m: msg.invalidAddress, e: String(e) });
+                            }
+                        })
+                    }
 
-                getInisght().then(res => {
-                    resolve({ c: 0, d: `${insightURL}address/${res.d}` })
-                    return window.open(`${insightURL}address/${res.d}`);
-                }).catch(res => {
-                    reject(res);
-                    return window.alert(res.m);
-                });
+                    getInisght().then(res => {
+                        resolve({ c: 0, d: `${insightURL}address/${res.d}` })
+                        return window.open(`${insightURL}address/${res.d}`);
+                    }).catch(res => {
+                        reject(res);
+                        console.error(res);
+                        return window.alert(res.m);
+                    });
+                }
+            } catch (e) {
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
+                return reject({ c: 1, m: msg.serverError, e: String(e) });
             }
+
         });
     };
+
 
     function openInsightTransaction(options) { //txid
         return new Promise(async (resolve, reject) => {
-
-            if (!options.txid) {
-                reject({ response: 1, m: msg.invalidParameter });
-                return window.alert(msg.invalidParameter);
-            } else {
-                function getInisght() {
-                    return new Promise(async (resolve, reject) => {
-                        try {
-                            const res = await fetch(insightURL + 'api/tx/' + options.txid);
-                            const resJson = await res.json();
-                            if (resJson && resJson.txid) {
-                                return resolve({ c: 0, d: resJson.txid, m: '' });
+            try {
+                if (!options.txid) {
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
+                    return window.alert(msg.invalidParameter);
+                } else {
+                    function getInisght() {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                const res = await fetch(insightURL + 'api/tx/' + options.txid);
+                                const resJson = await res.json();
+                                if (resJson && resJson.txid) {
+                                    return resolve({ c: 0, d: resJson.txid, m: '' });
+                                }
+                                return reject({ c: 1, m: msg.serverError });
                             }
-                            return reject({ c: 1, m: msg.serverError });
-                        }
-                        catch (e) {
-                            return reject({ c: 1, m: msg.invalidTxid, e: String(e) });
-                        }
-                    })
-                }
+                            catch (e) {
+                                return reject({ c: 1, m: msg.invalidTxid, e: String(e) });
+                            }
+                        })
+                    }
 
-                getInisght().then(res => {
-                    resolve({ c: 0, d: `${insightURL}tx/${res.d}` })
-                    return window.open(`${insightURL}tx/${res.d}`);
-                }).catch(res => {
-                    reject(res);
-                    return window.alert(res.m);
-                });
+                    getInisght().then(res => {
+                        resolve({ c: 0, d: `${insightURL}tx/${res.d}` })
+                        return window.open(`${insightURL}tx/${res.d}`);
+                    }).catch(res => {
+                        reject(res);
+                        console.error(res);
+                        return window.alert(res.m);
+                    });
+                }
+            } catch (e) {
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
+                return reject({ c: 1, m: msg.serverError, e: String(e) });
             }
         });
     };
+
     return {
         // login,
         payToWallet: payToWallet,
