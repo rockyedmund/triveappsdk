@@ -106,8 +106,8 @@ const TriveAppSDK = (function (window) {
                 }
 
                 if (Number(options.amount) < 100000) {
-                    reject({ response: 1, m: msg.amountMustBeInteger });
-                    return window.alert(msg.amountMustBeInteger);
+                    reject({ response: 1, m: msg.tooLessAmount });
+                    return window.alert(msg.tooLessAmount);
                 }
 
                 const openURL = `https://trvc.app/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;

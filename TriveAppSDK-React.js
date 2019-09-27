@@ -229,6 +229,6 @@ return {
     openInsightAddress: openInsightAddress,
     openInsightTransaction: openInsightTransaction,
 };
-})();
+});
 
 export default TriveAppSDK;
