@@ -1,4 +1,4 @@
-import 'jquery.min.js';
+import './jquery.min.js';
 const TriveAppSDK = (function (window) {
 
     // Force no margin and padding on html and body
