@@ -1,12 +1,5 @@
 const TriveAppSDK = (function (window) {
 
-    let pageLoaded = false;
-
-    // Some action from parent will be ignored until page loaded (For instance, on back pressed)
-    _setOnReady(function () {
-        pageLoaded = true;
-    });
-
     // Force no margin and padding on html and body
     _injectCSS();
 
@@ -16,14 +9,6 @@ const TriveAppSDK = (function (window) {
         css.innerHTML = "html, body { margin: 0 !important; padding: 0 !important; width: 100%; height: 100%; } ";
         css.innerHTML += "triveapp-root { width: 100%; height: 100%; overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block; }"
         document.head.appendChild(css);
-    }
-
-    function _setOnReady(onReady) {
-        if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
-            onReady();
-        } else {
-            document.addEventListener("DOMContentLoaded", onReady);
-        }
     }
 
     const queryRaw = window.location.search.substring(1).split('&');

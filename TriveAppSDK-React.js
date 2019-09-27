@@ -1,5 +1,15 @@
 const TriveAppSDK = (function () {
-    let pageLoaded = false;
+
+    // Force no margin and padding on html and body
+    _injectCSS();
+
+    function _injectCSS() {
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = "html, body { margin: 0 !important; padding: 0 !important; width: 100%; height: 100%; } ";
+        css.innerHTML += "triveapp-root { width: 100%; height: 100%; overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block; }"
+        document.head.appendChild(css);
+    }
 
     const queryRaw = window.location.search.substring(1).split('&');
     let walletParams = {};
@@ -32,30 +42,6 @@ const TriveAppSDK = (function () {
     }
 
     const msg = walletParams.lang === 'en' ? enMsg : zhMsg;
-
-    // Some action from parent will be ignored until page loaded (For instance, on back pressed)
-    _setOnReady(function () {
-        pageLoaded = true;
-    });
-
-    // Force no margin and padding on html and body
-    _injectCSS();
-
-    function _injectCSS() {
-        var css = document.createElement("style");
-        css.type = "text/css";
-        css.innerHTML = "html, body { margin: 0 !important; padding: 0 !important; width: 100%; height: 100%; } ";
-        css.innerHTML += "triveapp-root { width: 100%; height: 100%; overflow-y: scroll; -webkit-overflow-scrolling: touch; display: block; }"
-        document.head.appendChild(css);
-    }
-
-    function _setOnReady(onReady) {
-        if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
-            onReady();
-        } else {
-            document.addEventListener("DOMContentLoaded", onReady);
-        }
-    }
 
     /**
      * Request to login
