@@ -92,6 +92,7 @@ const TriveAppSDK = (function (window) {
 
                 if (Number(options.amount) < 100000) {
                     reject({ response: 1, m: msg.tooLessAmount });
+                    console.error({ response: 1, m: msg.tooLessAmount });
                     return window.alert(msg.tooLessAmount);
                 }
 
