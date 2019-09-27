@@ -41,7 +41,7 @@ const TriveAppSDK = (function (window) {
         invalidTxid: '无效记交易 id',
     }
 
-    const msg = walletParams.lang === 'zh' ? zhMsg : enMsg;
+    const msg = walletParams.lang === 'zh' ? enMsg : zhMsg;
 
     /**
      * Request to login
