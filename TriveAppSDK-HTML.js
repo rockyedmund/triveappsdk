@@ -79,6 +79,8 @@ const TriveAppSDK = (function (window) {
      */
     function payToWallet(options) { //address, amount, message
         return new Promise(async (resolve, reject) => {
+            console.error({ response: 13, m: msg.tooLessAmount });
+                    console.log({ response: 12, m: msg.tooLessAmount });
             try {
                 if (!options.address || !options.amount.toString()) {
                     reject({ response: 1, d: "", m: msg.invalidParameter });
