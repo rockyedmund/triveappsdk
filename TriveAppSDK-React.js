@@ -81,17 +81,20 @@ const TriveAppSDK = (function () {
         return new Promise(async (resolve, reject) => {
             try {
                 if (!options.address || !options.amount.toString()) {
-                    reject({ response: 1, d: "", m: msg.invalidParameter });
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.log({ response: 1, m: msg.invalidParameter });
                     return window.alert(msg.invalidParameter);
                 }
 
                 if (options.amount != parseInt(options.amount) || options.amount != Number(options.amount)) {
                     reject({ response: 1, m: msg.amountMustBeInteger });
+                    console.log({ response: 1, m: msg.amountMustBeInteger });
                     return window.alert(msg.amountMustBeInteger);
                 }
 
                 if (Number(options.amount) < 100000) {
                     reject({ response: 1, m: msg.tooLessAmount });
+                    console.error({ response: 1, m: msg.tooLessAmount });
                     return window.alert(msg.tooLessAmount);
                 }
 
@@ -99,6 +102,7 @@ const TriveAppSDK = (function () {
 
                 return resolve(window.open(openURL));
             } catch (e) {
+                console.log(({ c: 1, m: msg.serverError, e: String(e) }))
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
             }
         });
