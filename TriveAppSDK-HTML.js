@@ -45,29 +45,15 @@ const TriveAppSDK = (function (window) {
 
     /**
      * Request to login
-     * @param opts.url The URL that handle login request
+     * @param options.url The URL that handle login request
      */
-    // function login(opts, cb) {
-    //     // Input check
-    //     if (!cb) cb = Utils.noop;
-    //     if (!Utils.isObject(opts)) {
-    //         return cb("Invalid opts");
+    // function login(options) {
+    //     if (!options.address || !options.amount.toString()) {
+    //         reject({ response: 1, m: msg.invalidParameter });
+    //         console.error({ response: 1, m: msg.invalidParameter });
+    //         return window.alert(msg.invalidParameter);
     //     }
-
-    //     // Prepare request
-    //     var timestamp = Date.now();
-    //     var request = {
-    //         type: "LOGIN",
-    //         data: {
-    //             url: opts.url
-    //         },
-    //         timestamp: timestamp,
-    //         callback: cb
-    //     };
-    //     allRequests[timestamp] = request;
-
-    //     // Pass to parent
-    //     parent.postMessage(JSON.stringify(request), "*");
+        
     // }
 
     /**
@@ -139,7 +125,7 @@ const TriveAppSDK = (function (window) {
 
                     getBlock().then(res => {
                         resolve({ c: 0, d: `${insightURL}block/${res.d}` })
-                        return window.open(`${insightURL}block/${res.d}`);
+                        return window.open(`${insightURL}block/${res.d}`, "_blank");
                     }).catch(res => {
                         reject(res);
                         console.error(res);
@@ -183,7 +169,7 @@ const TriveAppSDK = (function (window) {
 
                     getInisght().then(res => {
                         resolve({ c: 0, d: `${insightURL}address/${res.d}` })
-                        return window.open(`${insightURL}address/${res.d}`);
+                        return window.open(`${insightURL}address/${res.d}`, "_blank");
                     }).catch(res => {
                         reject(res);
                         console.error(res);
@@ -225,7 +211,7 @@ const TriveAppSDK = (function (window) {
 
                     getInisght().then(res => {
                         resolve({ c: 0, d: `${insightURL}tx/${res.d}` })
-                        return window.open(`${insightURL}tx/${res.d}`);
+                        return window.open(`${insightURL}tx/${res.d}`, "_blank");
                     }).catch(res => {
                         reject(res);
                         console.error(res);
