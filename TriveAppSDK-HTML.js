@@ -209,9 +209,13 @@ const TriveAppSDK = (function (window) {
                         })
                     }
 
+                    let windowReference = window.open();
+
                     getInisght().then(res => {
                         resolve({ c: 0, d: `${insightURL}tx/${res.d}` })
-                        return window.open(`${insightURL}tx/${res.d}`, "_blank");
+                        // return window.open(`${insightURL}tx/${res.d}`, "_blank");
+                        windowReference.location = `${insightURL}tx/${res.d}`;
+                        return; 
                     }).catch(res => {
                         reject(res);
                         console.error(res);
