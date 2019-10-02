@@ -45,29 +45,15 @@ const TriveAppSDK = (function (window) {
 
     /**
      * Request to login
-     * @param opts.url The URL that handle login request
+     * @param options.url The URL that handle login request
      */
-    // function login(opts, cb) {
-    //     // Input check
-    //     if (!cb) cb = Utils.noop;
-    //     if (!Utils.isObject(opts)) {
-    //         return cb("Invalid opts");
+    // function login(options) {
+    //     if (!options.address || !options.amount.toString()) {
+    //         reject({ response: 1, m: msg.invalidParameter });
+    //         console.error({ response: 1, m: msg.invalidParameter });
+    //         return window.alert(msg.invalidParameter);
     //     }
 
-    //     // Prepare request
-    //     var timestamp = Date.now();
-    //     var request = {
-    //         type: "LOGIN",
-    //         data: {
-    //             url: opts.url
-    //         },
-    //         timestamp: timestamp,
-    //         callback: cb
-    //     };
-    //     allRequests[timestamp] = request;
-
-    //     // Pass to parent
-    //     parent.postMessage(JSON.stringify(request), "*");
     // }
 
     /**
@@ -100,7 +86,8 @@ const TriveAppSDK = (function (window) {
 
                 const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;
 
-                return resolve(window.open(openURL));
+                resolve({ c: 0, d: `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}` });
+                return window.open(openURL);
             } catch (e) {
                 console.error({ c: 1, m: msg.serverError, e: String(e) });
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
@@ -137,9 +124,12 @@ const TriveAppSDK = (function (window) {
                         })
                     }
 
+                    let windowReference = window.open();
+
                     getBlock().then(res => {
-                        resolve({ c: 0, d: `${insightURL}block/${res.d}` })
-                        return window.open(`${insightURL}block/${res.d}`);
+                        resolve({ c: 0, d: `${insightURL}block/${res.d}` });
+                        windowReference.location = `${insightURL}block/${res.d}`;
+                        return;
                     }).catch(res => {
                         reject(res);
                         console.error(res);
@@ -181,9 +171,12 @@ const TriveAppSDK = (function (window) {
                         })
                     }
 
+                    let windowReference = window.open();
+
                     getInisght().then(res => {
-                        resolve({ c: 0, d: `${insightURL}address/${res.d}` })
-                        return window.open(`${insightURL}address/${res.d}`);
+                        resolve({ c: 0, d: `${insightURL}address/${res.d}` });
+                        windowReference.location = `${insightURL}address/${res.d}`;
+                        return;
                     }).catch(res => {
                         reject(res);
                         console.error(res);
@@ -223,9 +216,12 @@ const TriveAppSDK = (function (window) {
                         })
                     }
 
+                    let windowReference = window.open();
+
                     getInisght().then(res => {
-                        resolve({ c: 0, d: `${insightURL}tx/${res.d}` })
-                        return window.open(`${insightURL}tx/${res.d}`);
+                        resolve({ c: 0, d: `${insightURL}tx/${res.d}` });
+                        windowReference.location = `${insightURL}tx/${res.d}`;
+                        return;
                     }).catch(res => {
                         reject(res);
                         console.error(res);
