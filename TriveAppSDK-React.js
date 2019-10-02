@@ -98,7 +98,7 @@ const TriveAppSDK = (function (window) {
                     return window.alert(msg.tooLessAmount);
                 }
 
-                const openURL = `https://trvc.app/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;
+                const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;
 
                 return resolve(window.open(openURL));
             } catch (e) {
