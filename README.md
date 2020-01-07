@@ -21,6 +21,9 @@ Parameters:
 You can query user's information such as user's TRVC balance and transaction history from [insight](https://insight.trivechain.com/). The documentation of Trivechain's Insight API is written [here](https://github.com/trivechain/trivechain-insight-api#insight-api).
 
 ## Payment / TRVC Transfer
+```javascript
+payToWallet()
+```
 The method we provide here is by using the URL query string. All users are required to login to view and open the application from our TriveAppstore. You just have to open a new browser tab and direct user to TRVC sending page in our [trvc.app](https://trvc.app). 
 
 The flow is as below:
