@@ -66,6 +66,8 @@ const TriveAppSDK = (function (window) {
     function payToWallet(options) { //address, amount, message
         return new Promise(async (resolve, reject) => {
             try {
+                let message = "";
+
                 if (!options.address || !options.amount.toString()) {
                     reject({ response: 1, m: msg.invalidParameter });
                     console.error({ response: 1, m: msg.invalidParameter });
@@ -84,10 +86,14 @@ const TriveAppSDK = (function (window) {
                     return window.alert(msg.tooLessAmount);
                 }
 
-                const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;
+                if (options.message) {
+                    message = "&message=" + options.message;
+                }
 
-                resolve({ c: 0, d: `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}` });
-                return window.open(openURL);
+                const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}${message}`;
+
+                resolve({ c: 0, d: openURL, win: window.open(openURL) });
+
             } catch (e) {
                 console.error({ c: 1, m: msg.serverError, e: String(e) });
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
