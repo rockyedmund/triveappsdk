@@ -102,6 +102,32 @@ const TriveAppSDK = (function (window) {
     };
 
     /**
+     * Pay to a wallet address
+     * @param options.address    Address to sign for
+     */
+    function loginRequest(options) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const hostname = window.location.hostname;
+
+                if (!options.address) {
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
+                    return window.alert(msg.invalidParameter);
+                }
+
+                const openURL = `https://trvc.app/authorize?params=${hostname}/${options.address}`;
+
+                resolve({ c: 0, d: openURL });
+
+            } catch (e) {
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
+                return reject({ c: 1, m: msg.serverError, e: String(e) });
+            }
+        });
+    };
+
+    /**
      * Block to open on insight
      * @param options.blockhash    Block hash to open on insight
      */
@@ -244,6 +270,7 @@ const TriveAppSDK = (function (window) {
     return {
         // login,
         payToWallet: payToWallet,
+        loginRequest: loginRequest,
         walletParams: walletParams,
         insightURL: insightURL,
         insightApiURL: insightApiURL,
