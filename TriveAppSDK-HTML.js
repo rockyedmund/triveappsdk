@@ -53,7 +53,7 @@ const TriveAppSDK = (function (window) {
     //         console.error({ response: 1, m: msg.invalidParameter });
     //         return window.alert(msg.invalidParameter);
     //     }
-        
+
     // }
 
     /**
@@ -66,6 +66,8 @@ const TriveAppSDK = (function (window) {
     function payToWallet(options) { //address, amount, message
         return new Promise(async (resolve, reject) => {
             try {
+                let message = "";
+
                 if (!options.address || !options.amount.toString()) {
                     reject({ response: 1, m: msg.invalidParameter });
                     console.error({ response: 1, m: msg.invalidParameter });
@@ -84,10 +86,39 @@ const TriveAppSDK = (function (window) {
                     return window.alert(msg.tooLessAmount);
                 }
 
-                const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`;
+                if (options.message) {
+                    message = "&message=" + options.message;
+                }
 
-                resolve({c: 0, d: `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}`});
-                return window.open(openURL);
+                const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}${message}`;
+
+                resolve({ c: 0, d: { url: openURL } });
+            } catch (e) {
+                console.error({ c: 1, m: msg.serverError, e: String(e) });
+                return reject({ c: 1, m: msg.serverError, e: String(e) });
+            }
+        });
+    };
+
+    /**
+     * Pay to a wallet address
+     * @param options.address    Address to sign for
+     */
+    function loginRequest(options) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const hostname = window.location.hostname;
+
+                if (!options.address) {
+                    reject({ response: 1, m: msg.invalidParameter });
+                    console.error({ response: 1, m: msg.invalidParameter });
+                    return window.alert(msg.invalidParameter);
+                }
+
+                const openURL = `https://trvc.app/authorize?redirect=${hostname}/${options.address}`;
+
+                resolve({ c: 0, d: openURL });
+
             } catch (e) {
                 console.error({ c: 1, m: msg.serverError, e: String(e) });
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
@@ -221,7 +252,7 @@ const TriveAppSDK = (function (window) {
                     getInisght().then(res => {
                         resolve({ c: 0, d: `${insightURL}tx/${res.d}` });
                         windowReference.location = `${insightURL}tx/${res.d}`;
-                        return; 
+                        return;
                     }).catch(res => {
                         reject(res);
                         console.error(res);
@@ -238,6 +269,7 @@ const TriveAppSDK = (function (window) {
     return {
         // login,
         payToWallet: payToWallet,
+        loginRequest: loginRequest,
         walletParams: walletParams,
         insightURL: insightURL,
         insightApiURL: insightApiURL,

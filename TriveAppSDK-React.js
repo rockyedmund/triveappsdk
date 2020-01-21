@@ -92,8 +92,7 @@ const TriveAppSDK = (function (window) {
 
                 const openURL = `https://trvc.app/wallet/send?trivechain:${options.address}&dapp=${walletParams.dapp}&amount=${options.amount}${message}`;
 
-                resolve({ c: 0, d: { url: openURL, win: window.open(openURL) } });
-
+                resolve({ c: 0, d: { url: openURL } });
             } catch (e) {
                 console.error({ c: 1, m: msg.serverError, e: String(e) });
                 return reject({ c: 1, m: msg.serverError, e: String(e) });
@@ -116,7 +115,7 @@ const TriveAppSDK = (function (window) {
                     return window.alert(msg.invalidParameter);
                 }
 
-                const openURL = `https://trvc.app/authorize?params=${hostname}/${options.address}`;
+                const openURL = `https://trvc.app/authorize?redirect=${hostname}/${options.address}`;
 
                 resolve({ c: 0, d: openURL });
 
