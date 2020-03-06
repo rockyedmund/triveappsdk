@@ -102,7 +102,9 @@ const TriveAppSDK = (function (window) {
 
     /**
      * Pay to a wallet address
-     * @param options.address    Address to sign for
+     * @param options.type    any data that you want to put in to sign
+     * @param options.url     this is the url of your dapp after user login with TRVC APP
+     * @param options.appName (optional) this is a string of your dapp name that show on TRVC APP's authorize page
      */
     function loginRequest(options) {
         return new Promise(async (resolve, reject) => {
