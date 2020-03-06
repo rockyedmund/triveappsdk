@@ -114,7 +114,11 @@ const TriveAppSDK = (function (window) {
                     return window.alert(msg.invalidParameter);
                 }
 
-                const openURL = `https://trvc.app/authorize?url=${options.url}&type=${options.type}`;
+                let openURL = `https://trvc.app/authorize?url=${options.url}&type=${options.type}`;
+
+                if (options.appName) {
+                    openURL = `https://trvc.app/authorize?url=${options.url}&type=${options.type}&appName=${options.appName}`;
+                }
 
                 resolve({ c: 0, d: openURL });
 
