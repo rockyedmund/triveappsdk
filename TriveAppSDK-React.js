@@ -107,15 +107,14 @@ const TriveAppSDK = (function (window) {
     function loginRequest(options) {
         return new Promise(async (resolve, reject) => {
             try {
-                const hostname = window.location.hostname;
 
-                if (!options.address) {
+                if (!options.type || !options.url) {
                     reject({ response: 1, m: msg.invalidParameter });
                     console.error({ response: 1, m: msg.invalidParameter });
                     return window.alert(msg.invalidParameter);
                 }
 
-                const openURL = `https://trvc.app/authorize?redirect=${hostname}/${options.address}`;
+                const openURL = `https://trvc.app/authorize?url=${options.url}&type=${options.type}`;
 
                 resolve({ c: 0, d: openURL });
 
